@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+Tail for url with Jquery Ajax,
+
+-->
+<html>
+    <head>
+        <title>Tail for URL</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+
+            var _orgAjax = jQuery.ajaxSettings.xhr;
+            var position = 0;
+            jQuery.ajaxSettings.xhr = function () {
+                var xhr = _orgAjax();
+                xhr.onprogress = function () {
+                    $("#console").append(xhr.responseText.substring(position) + ":" + position);
+                    position = xhr.responseText.length;
+                };
+
+                return xhr;
+            };
+            $(function () {
+                $.ajax({
+                    url: "tail.php",
+                    cache: false,
+                    error: function () {
+                        $("#console").append("Error");
+                        console.log("error");
+                    },
+                    success: function () {
+                        $("#console").append("Finish");
+                    }
+                });
+            });
+        </script>
+        <div id="console">
+
+        </div>
+        <form method="post">
+            Restart Tail.
+            <input type="submit" value="Click"/>
+        </form>
+    </body>
+</html>
